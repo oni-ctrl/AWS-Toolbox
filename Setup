@@ -1,0 +1,227 @@
+#############
+#AWS Toolbox#
+#############
+
+=====Install Python3.6 on Centos 7 VM==============================
+
+-----------STEPS------------------
+#sudo yum update
+#sudo yum install vim
+#sudo yum install wget
+
+#Prerequisite: We will compile the source code and require the GCC compiler to achieve this.
+
+sudo yum install gcc openssl-devel bzip2-devel
+
+#change directory to default location for source code
+
+cd /usr/src
+
+#Pull source code version of your choice from python.org/downloads in our case python3.6.9 gzipped source tarball
+
+sudo wget https://www.python.org/ftp/python/3.6.9/Python-3.6.9.tgz
+
+#Extract the downloaded package
+
+sudo tar xzf Python-3.6.9.tgz
+
+#Install & compile Python3.6
+
+cd Python-3.6.9
+sudo ./configure --enable-optimizations
+sudo make altinstall                              > make altinstall is used to prevent replacing the default python binary file /usr/bin/python .
+
+#Remove downloaded source achive from system
+
+rm /usr/src/Python-3.6.9.tgz
+
+#Check python version
+
+python3.6 -V          > exit from sudo
+
+
+===============Install pip3.6 on Centos 7 VM===========================
+
+-----------------STEPS------------------
+#update the package repository cache of yum package manager
+
+sudo yum makecache
+
+#add EPEL package repository
+
+sudo yum install epel-release
+
+#update the package repository cache of your CentOS 7 again
+
+sudo yum makecache
+
+#search for a Python 3 PIP package
+
+sudo yum search pip | grep python3
+
+#install Python 3.6 PIP
+
+sudo yum install python36-pip.noarch
+
+# check version
+
+pip3 -V
+
+=======================Install AWS CLI using pip3.6======================
+
+-------STEPS------------------
+#install AWS cli using pip3
+
+pip3 install awscli --upgrade --user
+
+#check version
+
+aws --version
+
+#https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-install.html
+#https://linuxhint.com/install-python-pip-centos7/
+
+#You are using pip version 18.1, however version 19.2.3 is available.
+#You should consider upgrading via the 'pip install --upgrade pip' command.
+
+
+==============Install boto3 using pip3.6==================================
+
+--------------STEPS------------------
+
+#install latest Boto 3 release via pip
+
+sudo pip3 install boto3
+
+#https://boto3.amazonaws.com/v1/documentation/api/latest/guide/quickstart.html
+#You are using pip version 8.1.2, however version 19.2.3 is available.
+You should consider upgrading via the 'pip install --upgrade pip' command.
+
+
+==============install virtualenv using pip3.6=========================== start here for local vm
+
+---------------STEPS------------------
+
+#Install virtualenv using pip3.6
+
+sudo python3 -m venv env
+
+#https://packaging.python.org/guides/installing-using-pip-and-virtual-environments/
+
+===========Install Terraform on Centos 7============
+
+----------------STEPS------------------
+#install unzip
+
+sudo yum install unzip
+
+#Download Terraform from the developer’s website
+
+sudo wget https://releases.hashicorp.com/terraform/0.12.9/terraform_0.12.9_linux_amd64.zip
+
+#unzip the downloaded file
+
+unzip terraform_0.12.9_linux_amd64.zip
+
+#move terraform binary 
+
+sudo mv terraform /usr/local/bin
+
+#verify version
+
+terraform -v
+
+#https://learn.hashicorp.com/terraform/getting-started/install.html
+#https://phoenixnap.com/kb/how-to-install-terraform-centos-ubuntu
+
+==============Install Ansible=============================
+
+----------STEPS------------------
+
+#install ansible    we already installed  epel repo
+
+sudo yum install ansible
+
+#verify version
+
+ansible --version
+
+=====================Install Packer==============================
+
+-----------------STEPS------------------
+
+#download precompiled binary from packer.io
+
+https://releases.hashicorp.com/packer/1.4.3/packer_1.4.3_linux_amd64.zip
+
+#unzip downloaded file
+
+unzip packer_1.4.3_linux_amd64.zip
+
+#move packer binary
+
+sudo mv terraform /usr/local/bin
+
+#verify version
+
+packer -v
+
+#https://www.packer.io/intro/getting-started/install.html
+
+
+=====ISSUES==============
+#login to aws CLI throwing up error; arguement invalid choice
+#to resolve
+
+aws --version
+
+sudo pip3 install --upgrade awscli
+
+sudo pip3 install --upgrade pip
+
+================Log on to AWS CLI================================
+
+# Logon to your variouse AWS account, navigate to IAM dashboard, create a user(deployer), and generate ACCESS/SECRET keys 
+# Back to you centos 7 local machine, run below command 
+	$ aws configure 
+	$ paste ACCESS ID 
+	$ paste SECRET ID 
+	$ Default region name  (type eu-west-1)
+	$ Default output format  (type json)
+
+#Next type
+	
+	export AWS_PROFILE=default
+
+#then type
+
+aws ec2 describe-vpcs --region eu-west-1      note the service you want to access goes after aws; in our case its ec2
+
+# you should get an output in json like this
+
+{
+    "Vpcs": [
+        {
+            "CidrBlock": "xxxxxxxx",
+            "DhcpOptionsId": "xxxxxxx",
+            "State": "available",
+            "VpcId": "xxxxxx",
+            "OwnerId": "xxxxx",
+            "InstanceTenancy": "default",
+            "CidrBlockAssociationSet": [
+                {
+                    "AssociationId": "xxxx",
+                    "CidrBlock": "xxxx",
+                    "CidrBlockState": {
+                        "State": "associated"
+                    }
+                }
+            ],
+            "IsDefault": true
+        }
+    ]
+}
+
+=================================END=====================================================
+
+
